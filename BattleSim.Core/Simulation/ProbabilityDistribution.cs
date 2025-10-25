@@ -225,10 +225,15 @@ public sealed class ProbabilityDistribution<T>
             return;
         }
 
-        var keys = _probabilities.Keys.ToList();
-        foreach (var key in keys)
+        if (Math.Abs(total - 1d) <= 1e-12)
         {
-            _probabilities[key] = _probabilities[key] / total;
+            return;
+        }
+
+        var scale = 1d / total;
+        foreach (var key in _probabilities.Keys)
+        {
+            _probabilities[key] *= scale;
         }
     }
 }
