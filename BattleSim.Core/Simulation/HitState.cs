@@ -5,12 +5,25 @@ namespace BattleSim.Core.Simulation;
 /// <summary>
 /// Represents the outcome statistics for a batch of hit rolls.
 /// </summary>
-public readonly record struct HitState(int TotalHits, int NaturalSixes, int NaturalOnes)
+public readonly struct HitState
 {
     public int ArmorPenetrationBonus { get; init; }
-    
     public int SelfWounds { get; init; }
     public int DirectWounds { get; init; }
+    
+    public int TotalHits { get; init; } 
+    public int NaturalSixes { get; init; } 
+    public int NaturalOnes { get; init; }
+
+    private readonly int _hashCode;
+
+    public HitState(int totalHits, int naturalSixes, int naturalOnes)
+    {
+        TotalHits = totalHits;
+        NaturalSixes = naturalSixes;
+        NaturalOnes = naturalOnes;
+        _hashCode = CalculateHashCode();
+    }
 
     public HitState Add(HitState other)
     {
@@ -52,4 +65,16 @@ public readonly record struct HitState(int TotalHits, int NaturalSixes, int Natu
 
         return this with { DirectWounds = updated };
     }
+
+    private int CalculateHashCode()
+    {
+        return HashCode.Combine(TotalHits, NaturalSixes, NaturalOnes);
+    }
+
+    public override bool Equals(object? o)
+    {
+        return  o is HitState other && _hashCode == other._hashCode;
+    }
+
+    public override int GetHashCode() => _hashCode;
 }
