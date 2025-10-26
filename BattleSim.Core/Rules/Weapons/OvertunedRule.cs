@@ -1,7 +1,9 @@
 ﻿namespace BattleSim.Core.Rules.Weapons;
 
-public sealed class OvertunedRule : IAfterHitRule, IWeaponKeyword
+public sealed class OvertunedOffensiveRule : IAfterHitOffensiveRule, IWeaponKeyword
 {
+    public string Name => "Overtuned";
+    
     public void Apply(AfterHitContext context)
     {
         if (context is null)

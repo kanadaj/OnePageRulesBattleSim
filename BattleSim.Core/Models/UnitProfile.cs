@@ -17,11 +17,9 @@ public record UnitProfile
         int toughness,
         int fear,
         int modelCount,
-    IEnumerable<WeaponProfile>? weapons = null,
-    IEnumerable<IBeforeHitDefensiveRule>? defensiveBeforeHitRules = null,
-    IEnumerable<IBeforeHitOffensiveRule>? attackerBeforeHitRules = null,
-    IEnumerable<IAfterDefenseRule>? defensiveAfterDefenseRules = null,
-    HeroProfile? hero = null)
+        IEnumerable<WeaponProfile>? weapons = null,
+        IEnumerable<IRule>? modelRules = null,
+        HeroProfile? hero = null)
     {
         if (string.IsNullOrWhiteSpace(name))
         {
@@ -54,11 +52,9 @@ public record UnitProfile
         Toughness = toughness;
         Fear = fear;
         ModelCount = modelCount;
-    Weapons = (weapons ?? Array.Empty<WeaponProfile>()).ToArray();
-    DefensiveBeforeHitRules = (defensiveBeforeHitRules ?? Array.Empty<IBeforeHitDefensiveRule>()).ToArray();
-    DefensiveAfterDefenseRules = (defensiveAfterDefenseRules ?? Array.Empty<IAfterDefenseRule>()).ToArray();
-    AttackerBeforeHitRules = (attackerBeforeHitRules ?? Array.Empty<IBeforeHitOffensiveRule>()).ToArray();
-    Hero = hero;
+        Weapons = (weapons ?? Array.Empty<WeaponProfile>()).ToArray();
+        Rules = (modelRules ?? Array.Empty<IBeforeHitDefensiveRule>()).ToArray();
+        Hero = hero;
     }
 
     public string Name { get; init; }
@@ -88,19 +84,9 @@ public record UnitProfile
     public IReadOnlyList<WeaponProfile> Weapons { get; init; }
 
     /// <summary>
-    /// Special rules that modify incoming attacks before hit rolls are made.
+    /// Special rules that modify attacks
     /// </summary>
-    public IReadOnlyList<IBeforeHitDefensiveRule> DefensiveBeforeHitRules { get; init; }
-
-    /// <summary>
-    /// Special rules that modify outgoing attacks before hit rolls are made.
-    /// </summary>
-    public IReadOnlyList<IBeforeHitOffensiveRule> AttackerBeforeHitRules { get; init; }
-
-    /// <summary>
-    /// Special rules that modify wound resolution after saves are rolled.
-    /// </summary>
-    public IReadOnlyList<IAfterDefenseRule> DefensiveAfterDefenseRules { get; init; }
+    public IReadOnlyList<IRule> Rules { get; init; }
 
     public HeroProfile? Hero { get; init; }
 
@@ -119,6 +105,7 @@ public record UnitProfile
     };
 
     public bool Combined { get; private init; }
+    public IEnumerable<IAttackRule> AttackRules => Rules.OfType<IAttackRule>();
 
     public string GetCombinedName()
     {

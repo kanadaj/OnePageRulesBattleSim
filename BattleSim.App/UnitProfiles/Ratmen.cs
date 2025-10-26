@@ -40,10 +40,10 @@ public static class Ratmen
             toughness: 1,
             fear: 0,
             modelCount: 10,
-            weapons: new[]
-            {
-                WeaponProfiles.HandWeapon,
-            }
+            weapons:
+            [
+                WeaponProfiles.HandWeapon
+            ]
         );
     }
 
@@ -56,10 +56,10 @@ public static class Ratmen
             toughness: 1,
             fear: 0,
             modelCount: 10,
-            weapons: new[]
-            {
-                WeaponProfiles.HandWeapon,
-            }
+            weapons:
+            [
+                WeaponProfiles.HandWeapon
+            ]
         );
 
         public static readonly UnitProfile Spear = new UnitProfile(
@@ -69,10 +69,10 @@ public static class Ratmen
             toughness: 1,
             fear: 0,
             modelCount: 10,
-            weapons: new[]
-            {
-                WeaponProfiles.Spear,
-            }
+            weapons:
+            [
+                WeaponProfiles.Spear
+            ]
         );
 
         public static readonly UnitProfile Halberd = new UnitProfile(
@@ -82,10 +82,10 @@ public static class Ratmen
             toughness: 1,
             fear: 0,
             modelCount: 10,
-            weapons: new[]
-            {
-                WeaponProfiles.Halberd,
-            }
+            weapons:
+            [
+                WeaponProfiles.Halberd
+            ]
         );
     }
 
@@ -103,37 +103,37 @@ public static class Ratmen
         public static readonly UnitProfile GatlingGun = Base with
         {
             Name = "R Gatling Gun Team",
-            Weapons = new[]
-            {
-                WeaponProfiles.GatlingGun,
-            }
+            Weapons =
+            [
+                WeaponProfiles.GatlingGun
+            ]
         };
 
         public static readonly UnitProfile Flamethrower = Base with
         {
             Name = "R Flamethrower Team",
-            Weapons = new[]
-            {
-                WeaponProfiles.Flamethrower,
-            }
+            Weapons =
+            [
+                WeaponProfiles.Flamethrower
+            ]
         };
 
         public static readonly UnitProfile OvertunedGatlingGun = Base with
         {
             Name = "R Overtuned Gatling Gun Team",
-            Weapons = new[]
-            {
-                WeaponProfiles.OvertunedGatlingGun,
-            }
+            Weapons =
+            [
+                WeaponProfiles.OvertunedGatlingGun
+            ]
         };
 
         public static readonly UnitProfile ToxinMortar = Base with
         {
             Name = "R Toxin Mortar Team",
-            Weapons = new[]
-            {
-                WeaponProfiles.ToxinMortar,
-            }
+            Weapons =
+            [
+                WeaponProfiles.ToxinMortar
+            ]
         };
     }
 
@@ -146,10 +146,10 @@ public static class Ratmen
             toughness: 1,
             fear: 0,
             modelCount: 5,
-            weapons: new[]
-            {
-                WeaponProfiles.HeavyHalberd,
-            }
+            weapons:
+            [
+                WeaponProfiles.HeavyHalberd
+            ]
         );
 
         public static readonly UnitProfile HeavyGreatWeapon = new UnitProfile(
@@ -159,10 +159,10 @@ public static class Ratmen
             toughness: 1,
             fear: 0,
             modelCount: 5,
-            weapons: new[]
-            {
-                WeaponProfiles.HeavyGreatWeapon(),
-            }
+            weapons:
+            [
+                WeaponProfiles.HeavyGreatWeapon()
+            ]
         );
     }
 
@@ -175,15 +175,15 @@ public static class Ratmen
             toughness: 1,
             fear: 0,
             modelCount: 5,
-            weapons: new[]
-            {
-                WeaponProfiles.DualHandWeapon,
-            },
-            defensiveBeforeHitRules: new IBeforeHitDefensiveRule[]
-            {
+            weapons:
+            [
+                WeaponProfiles.DualHandWeapon
+            ],
+            modelRules:
+            [
                 new EvasionRule(),
                 new StealthRule()
-            }
+            ]
         );
     }
 
@@ -196,25 +196,25 @@ public static class Ratmen
             toughness: 3,
             fear: 0,
             modelCount: 3,
-            weapons: new[]
-            {
-                WeaponProfiles.SwarmAttack(),
-            }
+            weapons:
+            [
+                WeaponProfiles.SwarmAttack()
+            ]
         );
 
         public static UnitProfile UnpredictableFighter => Base with
         {
             Name = "R Rat Swarm (Unpredictable Fighter)",
-            Weapons = new []
-            {
+            Weapons =
+            [
                 WeaponProfiles.SwarmAttack() with
                 {
-                    AfterHitRules = new IAfterHitRule[]
-                    {
-                        new UnpredictableFighterRule()
-                    }
-                },
-            },
+                    Rules =
+                    [
+                        new UnpredictableFighterOffensiveRule()
+                    ]
+                }
+            ],
         };
     }
     public static class RatOgres
@@ -226,10 +226,10 @@ public static class Ratmen
             toughness: 3,
             fear: 0,
             modelCount: 3,
-            weapons: new[]
-            {
-                WeaponProfiles.RendingClaws with { AfterHitRules = new IAfterHitRule[] { new FuriousRule() } },
-            }
+            weapons:
+            [
+                WeaponProfiles.RendingClaws with { Rules = [new FuriousOffensiveRule()] }
+            ]
         );
 
         public static readonly UnitProfile GreatWeapon = new UnitProfile(
@@ -239,10 +239,10 @@ public static class Ratmen
             toughness: 3,
             fear: 0,
             modelCount: 3,
-            weapons: new[]
-            {
-                WeaponProfiles.GreatWeapon(3) with { AfterHitRules = new IAfterHitRule[] { new FuriousRule() } },
-            }
+            weapons:
+            [
+                WeaponProfiles.GreatWeapon(3) with { Rules = [new FuriousOffensiveRule()] }
+            ]
         );
     }
 
@@ -260,48 +260,48 @@ public static class Ratmen
         public static readonly UnitProfile DrillFist = Base with
         {
             Name = "R Storm Ogres (Drill First)",
-            Weapons = new[]
-            {
-                WeaponProfiles.DrillFist with { AfterHitRules = new IAfterHitRule[] { new FuriousRule() } },
-            }
+            Weapons =
+            [
+                WeaponProfiles.DrillFist with { Rules = [new FuriousOffensiveRule()] }
+            ]
         };
 
         public static readonly UnitProfile ShockFist = Base with
         {
             Name = "R Storm Ogres (Shock Fist)",
-            Weapons = new[]
-            {
-                WeaponProfiles.ShockFist with { AfterHitRules = new IAfterHitRule[] { new FuriousRule() } },
-            }
+            Weapons =
+            [
+                WeaponProfiles.ShockFist with { Rules = [new FuriousOffensiveRule()] }
+            ]
         };
 
         public static readonly UnitProfile RollerFist = Base with
         {
             Name = "R Storm Ogres (Roller Fist)",
-            Weapons = new[]
-            {
-                WeaponProfiles.RollerFist with { AfterHitRules = new IAfterHitRule[] { new FuriousRule() } },
-            }
+            Weapons =
+            [
+                WeaponProfiles.RollerFist with { Rules = [new FuriousOffensiveRule()] }
+            ]
         };
 
 
         public static readonly UnitProfile OvertunedGatlingGun = Base with
         {
             Name = "R Storm Ogres (OT Gatling Gun)",
-            Weapons = new[]
-            {
-                WeaponProfiles.OvertunedGatlingGun,
-            }
+            Weapons =
+            [
+                WeaponProfiles.OvertunedGatlingGun
+            ]
         };
 
 
         public static readonly UnitProfile Gatling = Base with
         {
             Name = "R Storm Ogres (Gatling Gun)",
-            Weapons = new[]
-            {
-                WeaponProfiles.GatlingGun,
-            }
+            Weapons =
+            [
+                WeaponProfiles.GatlingGun
+            ]
         };
 
         
@@ -314,11 +314,11 @@ public static class Ratmen
         toughness: 12,
         fear: 0,
         modelCount: 1,
-        weapons: new[]
-        {
+        weapons:
+        [
             WeaponProfiles.Claw(10),
-            WeaponProfiles.Stomp(4),
-        }
+            WeaponProfiles.Stomp(4)
+        ]
     );
 
 
@@ -331,11 +331,11 @@ public static class Ratmen
             toughness: 18,
             fear: 3,
             modelCount: 1,
-            weapons: new[]
-            {
+            weapons:
+            [
                 WeaponProfiles.GiantClaw(12),
-                WeaponProfiles.HeavyStomp(6),
-            }
+                WeaponProfiles.HeavyStomp(6)
+            ]
         );
     }
 }

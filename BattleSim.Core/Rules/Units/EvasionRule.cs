@@ -2,6 +2,8 @@ namespace BattleSim.Core.Rules.Units;
 
 public sealed class EvasionRule : IBeforeHitDefensiveRule
 {
+    public string Name => "Evasion";
+    
     public void Apply(BeforeHitContext context)
     {
         if (context is null)

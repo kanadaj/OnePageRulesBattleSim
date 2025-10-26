@@ -1,7 +1,9 @@
 namespace BattleSim.Core.Rules.Weapons;
 
-public sealed class BaneRule : IAfterHitRule, IWeaponKeyword
+public sealed class BaneOffensiveRule : IAfterHitOffensiveRule, IWeaponKeyword
 {
+    public string Name => "Bane";
+    
     public void Apply(AfterHitContext context)
     {
         if (context is null)

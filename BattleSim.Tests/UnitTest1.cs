@@ -19,7 +19,7 @@ public class BattleSimulatorTests
             toughness: 1,
             fear: 0,
             modelCount: 1,
-            weapons: new[] { new WeaponProfile("Sword", 1) });
+            weapons: [new WeaponProfile("Sword", 1)]);
 
         var defender = new UnitProfile(
             name: "Goblin",
@@ -28,7 +28,7 @@ public class BattleSimulatorTests
             toughness: 1,
             fear: 0,
             modelCount: 1,
-            weapons: Array.Empty<WeaponProfile>());
+            weapons: []);
 
         var simulator = new BattleSimulator();
         var result = simulator.Simulate(attacker, defender);
@@ -55,7 +55,7 @@ public class BattleSimulatorTests
             toughness: 2,
             fear: 0,
             modelCount: 10,
-            weapons: Array.Empty<WeaponProfile>());
+            weapons: []);
 
         var terrifying = new UnitProfile(
             name: "Wraith",
@@ -64,7 +64,7 @@ public class BattleSimulatorTests
             toughness: 3,
             fear: 2,
             modelCount: 5,
-            weapons: Array.Empty<WeaponProfile>());
+            weapons: []);
 
         var simulator = new BattleSimulator();
         var result = simulator.Simulate(terrifying, fearless);
@@ -85,7 +85,7 @@ public class BattleSimulatorTests
             name: "Arcane Bolt",
             attacksPerModel: 2,
             armorPenetration: 1,
-            afterHitRules: new IAfterHitRule[] { new ExplodingSixesRule() });
+            rules: [new ExplodingSixesOffensiveRule()]);
 
         var mage = new UnitProfile(
             name: "Mage",
@@ -94,7 +94,7 @@ public class BattleSimulatorTests
             toughness: 2,
             fear: 1,
             modelCount: 1,
-            weapons: new[] { explosiveWeapon });
+            weapons: [explosiveWeapon]);
 
         var knight = new UnitProfile(
             name: "Knight",
@@ -103,7 +103,7 @@ public class BattleSimulatorTests
             toughness: 2,
             fear: 0,
             modelCount: 1,
-            weapons: new[] { new WeaponProfile("Lance", 2) });
+            weapons: [new WeaponProfile("Lance", 2)]);
 
         var simulator = new BattleSimulator();
         var result = simulator.Simulate(mage, knight);
@@ -118,9 +118,9 @@ public class BattleSimulatorTests
     public void EvasionReducesIncomingHits()
     {
     var axe = new WeaponProfile("Axe", 2);
-        var attacker = new UnitProfile("Raider", 3, 5, 1, 0, 5, new[] { axe });
+        var attacker = new UnitProfile("Raider", 3, 5, 1, 0, 5, [axe]);
 
-        var plainDefender = new UnitProfile("Guard", 4, 4, 1, 0, 5, Array.Empty<WeaponProfile>());
+        var plainDefender = new UnitProfile("Guard", 4, 4, 1, 0, 5, []);
         var evasiveDefender = new UnitProfile(
             name: "Guard",
             quality: 4,
@@ -128,8 +128,8 @@ public class BattleSimulatorTests
             toughness: 1,
             fear: 0,
             modelCount: 5,
-            weapons: Array.Empty<WeaponProfile>(),
-            defensiveBeforeHitRules: new IBeforeHitDefensiveRule[] { new EvasionRule() });
+            weapons: [],
+            modelRules: [new EvasionRule()]);
 
         var simulator = new BattleSimulator();
         var baseline = simulator.Simulate(attacker, plainDefender);
@@ -142,12 +142,12 @@ public class BattleSimulatorTests
     public void RegenerationCanBeSuppressedByBane()
     {
         var normalWeapon = new WeaponProfile("Blade", 2, 1);
-        var baneWeapon = new WeaponProfile("Blade", 2, 1, afterHitRules: new IAfterHitRule[] { new BaneRule() });
+        var baneWeapon = new WeaponProfile("Blade", 2, 1, rules: [new BaneOffensiveRule()]);
 
-        var attackerNormal = new UnitProfile("Paladin", 3, 5, 2, 0, 1, new[] { normalWeapon });
-        var attackerBane = new UnitProfile("Paladin", 3, 5, 2, 0, 1, new[] { baneWeapon });
+        var attackerNormal = new UnitProfile("Paladin", 3, 5, 2, 0, 1, [normalWeapon]);
+        var attackerBane = new UnitProfile("Paladin", 3, 5, 2, 0, 1, [baneWeapon]);
 
-        var defenderNoRegen = new UnitProfile("Troll", 5, 4, 3, 0, 1, Array.Empty<WeaponProfile>());
+        var defenderNoRegen = new UnitProfile("Troll", 5, 4, 3, 0, 1, []);
         var defenderRegen = new UnitProfile(
             name: "Troll",
             quality: 5,
@@ -155,8 +155,8 @@ public class BattleSimulatorTests
             toughness: 3,
             fear: 0,
             modelCount: 1,
-            weapons: Array.Empty<WeaponProfile>(),
-            defensiveAfterDefenseRules: new IAfterDefenseRule[] { new RegenerationRule() });
+            weapons: [],
+            modelRules: [new RegenerationRule()]);
 
         var simulator = new BattleSimulator();
 
@@ -176,12 +176,12 @@ public class BattleSimulatorTests
         var rending = new WeaponProfile(
             name: "Halberd",
             attacksPerModel: 2,
-            afterHitRules: new IAfterHitRule[] { new RendingRule() });
+            rules: [new RendingOffensiveRule()]);
 
-        var attackerStandard = new UnitProfile("Guard", 3, 5, 1, 0, 3, new[] { standard });
-        var attackerRending = new UnitProfile("Guard", 3, 5, 1, 0, 3, new[] { rending });
+        var attackerStandard = new UnitProfile("Guard", 3, 5, 1, 0, 3, [standard]);
+        var attackerRending = new UnitProfile("Guard", 3, 5, 1, 0, 3, [rending]);
 
-        var defender = new UnitProfile("Armored Orc", 4, 4, 2, 0, 3, Array.Empty<WeaponProfile>());
+        var defender = new UnitProfile("Armored Orc", 4, 4, 2, 0, 3, []);
 
         var simulator = new BattleSimulator();
         var baseline = simulator.Simulate(attackerStandard, defender);
@@ -196,12 +196,12 @@ public class BattleSimulatorTests
         var weapon = new WeaponProfile(
             name: "Polearm",
             attacksPerModel: 2,
-            beforeHitRules: new IBeforeHitOffensiveRule[] { new SlayerRule(), new ReapRule() });
+            rules: new IBeforeHitOffensiveRule[] { new SlayerRule(), new ReapRule() });
 
-        var attacker = new UnitProfile("Halberdier", 3, 5, 1, 0, 3, new[] { weapon });
+        var attacker = new UnitProfile("Halberdier", 3, 5, 1, 0, 3, [weapon]);
 
-        var eliteTarget = new UnitProfile("Ogre", 4, 3, 3, 0, 2, Array.Empty<WeaponProfile>());
-        var regularTarget = new UnitProfile("Soldier", 4, 4, 2, 0, 2, Array.Empty<WeaponProfile>());
+        var eliteTarget = new UnitProfile("Ogre", 4, 3, 3, 0, 2, []);
+        var regularTarget = new UnitProfile("Soldier", 4, 4, 2, 0, 2, []);
 
         var simulator = new BattleSimulator();
         var versusElite = simulator.Simulate(attacker, eliteTarget);
@@ -216,11 +216,10 @@ public class BattleSimulatorTests
         var lancerWeapon = new WeaponProfile(
             name: "Lance",
             attacksPerModel: 2,
-            beforeHitRules: new IBeforeHitOffensiveRule[] { new ThrustRule() },
-            afterHitRules: new IAfterHitRule[] { new FuriousRule() });
+            rules: [new ThrustRule(), new FuriousOffensiveRule()]);
 
-        var cavalry = new UnitProfile("Cavalry", 3, 4, 2, 0, 3, new[] { lancerWeapon });
-        var infantry = new UnitProfile("Spearman", 4, 4, 1, 0, 6, Array.Empty<WeaponProfile>());
+        var cavalry = new UnitProfile("Cavalry", 3, 4, 2, 0, 3, [lancerWeapon]);
+        var infantry = new UnitProfile("Spearman", 4, 4, 1, 0, 6, []);
 
         var simulator = new BattleSimulator();
 
@@ -234,13 +233,13 @@ public class BattleSimulatorTests
     public void CounterAllowsDefenderToStrikeFirst()
     {
     var axe = new WeaponProfile("Axe", 2);
-        var attacker = new UnitProfile("Barbarian", 3, 5, 1, 0, 4, new[] { axe });
+        var attacker = new UnitProfile("Barbarian", 3, 5, 1, 0, 4, [axe]);
 
     var spear = new WeaponProfile("Spear", 1);
-    var counterSpear = new WeaponProfile("Spear", 1, beforeHitRules: new IBeforeHitOffensiveRule[] { new CounterRule() });
+    var counterSpear = new WeaponProfile("Spear", 1, rules: new IBeforeHitOffensiveRule[] { new CounterRule() });
 
-        var defenderNormal = new UnitProfile("Guard", 4, 4, 1, 0, 4, new[] { spear });
-        var defenderCounter = new UnitProfile("Guard", 4, 4, 1, 0, 4, new[] { counterSpear });
+        var defenderNormal = new UnitProfile("Guard", 4, 4, 1, 0, 4, [spear]);
+        var defenderCounter = new UnitProfile("Guard", 4, 4, 1, 0, 4, [counterSpear]);
 
         var simulator = new BattleSimulator();
 
@@ -254,10 +253,10 @@ public class BattleSimulatorTests
     [Fact]
     public void ReliableIgnoresEvasionPenalty()
     {
-    var reliableWeapon = new WeaponProfile("Repeater", 3, beforeHitRules: new IBeforeHitOffensiveRule[] { new ReliableRule() });
-        var shooter = new UnitProfile("Marksman", 4, 5, 1, 0, 2, new[] { reliableWeapon });
+    var reliableWeapon = new WeaponProfile("Repeater", 3, rules: new IBeforeHitOffensiveRule[] { new ReliableRule() });
+        var shooter = new UnitProfile("Marksman", 4, 5, 1, 0, 2, [reliableWeapon]);
 
-        var plainTarget = new UnitProfile("Scout", 4, 4, 1, 0, 3, Array.Empty<WeaponProfile>());
+        var plainTarget = new UnitProfile("Scout", 4, 4, 1, 0, 3, []);
         var evasiveTarget = new UnitProfile(
             name: "Scout",
             quality: 4,
@@ -265,8 +264,8 @@ public class BattleSimulatorTests
             toughness: 1,
             fear: 0,
             modelCount: 3,
-            weapons: Array.Empty<WeaponProfile>(),
-            defensiveBeforeHitRules: new IBeforeHitDefensiveRule[] { new EvasionRule() });
+            weapons: [],
+            modelRules: [new EvasionRule()]);
 
         var simulator = new BattleSimulator();
         var baseline = simulator.Simulate(shooter, plainTarget);
@@ -279,12 +278,12 @@ public class BattleSimulatorTests
     public void PreciseImprovesHitChance()
     {
     var basicWeapon = new WeaponProfile("Bow", 2);
-    var preciseWeapon = new WeaponProfile("Bow", 2, beforeHitRules: new IBeforeHitOffensiveRule[] { new PreciseRule() });
+    var preciseWeapon = new WeaponProfile("Bow", 2, rules: new IBeforeHitOffensiveRule[] { new PreciseRule() });
 
-        var archerBasic = new UnitProfile("Archer", 4, 5, 1, 0, 2, new[] { basicWeapon });
-        var archerPrecise = new UnitProfile("Archer", 4, 5, 1, 0, 2, new[] { preciseWeapon });
+        var archerBasic = new UnitProfile("Archer", 4, 5, 1, 0, 2, [basicWeapon]);
+        var archerPrecise = new UnitProfile("Archer", 4, 5, 1, 0, 2, [preciseWeapon]);
 
-        var defender = new UnitProfile("Target", 5, 5, 1, 0, 3, Array.Empty<WeaponProfile>());
+        var defender = new UnitProfile("Target", 5, 5, 1, 0, 3, []);
 
         var simulator = new BattleSimulator();
         var baseline = simulator.Simulate(archerBasic, defender);
@@ -301,12 +300,12 @@ public class BattleSimulatorTests
             name: "Arc Rifle",
             attacksPerModel: 3,
             armorPenetration: 1,
-            afterHitRules: new IAfterHitRule[] { new OvertunedRule() });
+            rules: [new OvertunedOffensiveRule()]);
 
-        var standardShooter = new UnitProfile("Engineer", 3, 5, 2, 0, 2, new[] { standardWeapon });
-        var overtunedShooter = new UnitProfile("Engineer", 3, 5, 2, 0, 2, new[] { overtunedWeapon });
+        var standardShooter = new UnitProfile("Engineer", 3, 5, 2, 0, 2, [standardWeapon]);
+        var overtunedShooter = new UnitProfile("Engineer", 3, 5, 2, 0, 2, [overtunedWeapon]);
 
-        var target = new UnitProfile("Dummy", 5, 5, 1, 0, 3, Array.Empty<WeaponProfile>());
+        var target = new UnitProfile("Dummy", 5, 5, 1, 0, 3, []);
 
         var simulator = new BattleSimulator();
         var baseline = simulator.Simulate(standardShooter, target);
@@ -325,12 +324,12 @@ public class BattleSimulatorTests
             name: "Lance",
             attacksPerModel: 2,
             armorPenetration: 1,
-            beforeHitRules: new IBeforeHitOffensiveRule[] { new CavalryCapRule() });
+            rules: new IBeforeHitOffensiveRule[] { new CavalryCapRule() });
 
-        var uncappedCavalry = new UnitProfile("Knights", 3, 4, 2, 0, 10, new[] { uncappedWeapon });
-        var cappedCavalry = new UnitProfile("Knights", 3, 4, 2, 0, 10, new[] { cappedWeapon });
+        var uncappedCavalry = new UnitProfile("Knights", 3, 4, 2, 0, 10, [uncappedWeapon]);
+        var cappedCavalry = new UnitProfile("Knights", 3, 4, 2, 0, 10, [cappedWeapon]);
 
-        var infantry = new UnitProfile("Infantry", 4, 4, 1, 0, 20, Array.Empty<WeaponProfile>());
+        var infantry = new UnitProfile("Infantry", 4, 4, 1, 0, 20, []);
 
         var simulator = new BattleSimulator();
         var uncapped = simulator.Simulate(uncappedCavalry, infantry);
@@ -345,18 +344,17 @@ public class BattleSimulatorTests
         var baselineWeapon = new WeaponProfile(
             name: "Battery",
             attacksPerModel: 1,
-            beforeHitRules: new IBeforeHitOffensiveRule[] { new PreciseRule() });
+            rules: new IBeforeHitOffensiveRule[] { new PreciseRule() });
 
         var crossingWeapon = new WeaponProfile(
             name: "Battery",
             attacksPerModel: 1,
-            beforeHitRules: new IBeforeHitOffensiveRule[] { new PreciseRule() },
-            afterHitRules: new IAfterHitRule[] { new MultiplyHitsRule() });
+            rules: [new PreciseRule(), new MultiplyHitsOffensiveRule()]);
 
-        var baseline = new UnitProfile("Crew", 3, 6, 1, 0, 3, new[] { baselineWeapon });
-        var enhanced = new UnitProfile("Crew", 3, 6, 1, 0, 3, new[] { crossingWeapon });
+        var baseline = new UnitProfile("Crew", 3, 6, 1, 0, 3, [baselineWeapon]);
+        var enhanced = new UnitProfile("Crew", 3, 6, 1, 0, 3, [crossingWeapon]);
 
-        var target = new UnitProfile("Siege Tower", 5, 4, 3, 0, 6, Array.Empty<WeaponProfile>());
+        var target = new UnitProfile("Siege Tower", 5, 4, 3, 0, 6, []);
 
         var simulator = new BattleSimulator();
         var baselineResult = simulator.Simulate(baseline, target);
@@ -371,7 +369,7 @@ public class BattleSimulatorTests
         var rangedWeapon = new WeaponProfile(
             name: "Longbow",
             attacksPerModel: 1,
-            afterHitRules: new IAfterHitRule[] { new FixedDirectWoundsRule(6) });
+            rules: [new FixedDirectWoundsOffensiveRule(6)]);
 
         var attacker = new UnitProfile(
             name: "Archer Company",
@@ -380,7 +378,7 @@ public class BattleSimulatorTests
             toughness: 1,
             fear: 0,
             modelCount: 10,
-            weapons: new[] { rangedWeapon });
+            weapons: [rangedWeapon]);
 
         var defender = new UnitProfile(
             name: "Shield Wall",
@@ -388,8 +386,8 @@ public class BattleSimulatorTests
             defense: 4,
             toughness: 1,
             fear: 0,
-            modelCount: 10,
-            weapons: Array.Empty<WeaponProfile>());
+            modelCount: 5,
+            weapons: []);
 
         var simulator = new BattleSimulator();
         var result = simulator.Simulate(attacker, defender, SimulationMode.Ranged);
@@ -406,12 +404,12 @@ public class BattleSimulatorTests
         var softVolley = new WeaponProfile(
             name: "Volley",
             attacksPerModel: 1,
-            afterHitRules: new IAfterHitRule[] { new FixedDirectWoundsRule(6) });
+            rules: [new FixedDirectWoundsOffensiveRule(6)]);
 
         var decisiveVolley = new WeaponProfile(
             name: "Volley",
             attacksPerModel: 1,
-            afterHitRules: new IAfterHitRule[] { new FixedDirectWoundsRule(8) });
+            rules: [new FixedDirectWoundsOffensiveRule(8)]);
 
         var softAttacker = new UnitProfile(
             name: "Skirmishers",
@@ -420,21 +418,21 @@ public class BattleSimulatorTests
             toughness: 1,
             fear: 0,
             modelCount: 5,
-            weapons: new[] { softVolley });
+            weapons: [softVolley]);
 
         var decisiveAttacker = softAttacker with
         {
-            Weapons = new[] { decisiveVolley }
+            Weapons = [decisiveVolley]
         };
 
         var defender = new UnitProfile(
             name: "Heavy Infantry",
             quality: 4,
             defense: 4,
-            toughness: 2,
+            toughness: 1,
             fear: 0,
             modelCount: 8,
-            weapons: Array.Empty<WeaponProfile>());
+            weapons: []);
 
         var simulator = new BattleSimulator();
         var softResult = simulator.Simulate(softAttacker, defender, SimulationMode.Ranged);
@@ -445,53 +443,6 @@ public class BattleSimulatorTests
     }
 
     [Fact]
-    public void RangedAttack_CountsHeroAsSingleAdditionalModel()
-    {
-        var hero = new HeroProfile("Warleader", quality: 3, toughness: 5, defense: 3);
-
-        var defender = new UnitProfile(
-            name: "Guardian Phalanx",
-            quality: 4,
-            defense: 4,
-            toughness: 2,
-            fear: 0,
-            modelCount: 4,
-            weapons: Array.Empty<WeaponProfile>(),
-            hero: hero);
-
-        var lightVolley = new WeaponProfile(
-            name: "Light Volley",
-            attacksPerModel: 1,
-            afterHitRules: new IAfterHitRule[] { new FixedDirectWoundsRule(4) });
-
-        var heavyVolley = new WeaponProfile(
-            name: "Heavy Volley",
-            attacksPerModel: 1,
-            afterHitRules: new IAfterHitRule[] { new FixedDirectWoundsRule(6) });
-
-        var lightAttacker = new UnitProfile(
-            name: "Bow Guard",
-            quality: 3,
-            defense: 5,
-            toughness: 1,
-            fear: 0,
-            modelCount: 6,
-            weapons: new[] { lightVolley });
-
-        var heavyAttacker = lightAttacker with
-        {
-            Weapons = new[] { heavyVolley }
-        };
-
-        var simulator = new BattleSimulator();
-        var lightResult = simulator.Simulate(lightAttacker, defender, SimulationMode.Ranged);
-        var heavyResult = simulator.Simulate(heavyAttacker, defender, SimulationMode.Ranged);
-
-        Assert.Equal(0d, lightResult.ProbabilityUnitADestroysUnitB, precision: 6);
-        Assert.Equal(1d, heavyResult.ProbabilityUnitADestroysUnitB, precision: 6);
-    }
-
-    [Fact]
     public void UnpredictableFighterAddsVarianceAndDamage()
     {
         var baselineWeapon = new WeaponProfile("Warp Blades", 3, 1);
@@ -499,12 +450,12 @@ public class BattleSimulatorTests
             name: "Warp Blades",
             attacksPerModel: 3,
             armorPenetration: 1,
-            afterHitRules: new IAfterHitRule[] { new UnpredictableFighterRule() });
+            rules: [new UnpredictableFighterOffensiveRule()]);
 
-        var disciplined = new UnitProfile("Disciplined Guard", 3, 5, 1, 0, 5, new[] { baselineWeapon });
-        var frenzied = new UnitProfile("Warp Frenzy", 3, 5, 1, 0, 5, new[] { unpredictableWeapon });
+        var disciplined = new UnitProfile("Disciplined Guard", 3, 5, 1, 0, 5, [baselineWeapon]);
+        var frenzied = new UnitProfile("Warp Frenzy", 3, 5, 1, 0, 5, [unpredictableWeapon]);
 
-        var defender = new UnitProfile("Shield Wall", 4, 4, 2, 0, 8, Array.Empty<WeaponProfile>());
+        var defender = new UnitProfile("Shield Wall", 4, 4, 2, 0, 8, []);
 
         var simulator = new BattleSimulator();
         var disciplinedResult = simulator.Simulate(disciplined, defender);
@@ -524,15 +475,15 @@ public class BattleSimulatorTests
             toughness: 2,
             fear: 1,
             defense: 3,
-            weapons: new[]
-            {
+            weapons:
+            [
                 new WeaponProfile(
                     name: "Chieftain's Great Axe",
                     attacksPerModel: 3,
                     armorPenetration: 2,
-                    afterHitRules: new IAfterHitRule[] { new FuriousRule() })
-            },
-            offensiveAuras: new IBeforeHitOffensiveRule[] { new PiercingTagRule(1) });
+                    rules: [new FuriousOffensiveRule()])
+            ],
+            auras: [new PiercingTagRule(1)]);
 
         var withHero = baseline.WithHero(chieftain);
         var target = Ratmen.GiantBeast;
@@ -557,12 +508,11 @@ public class BattleSimulatorTests
             toughness: 2,
             fear: 1,
             defense: 3,
-            weapons: new[]
-            {
+            weapons:
+            [
                 new WeaponProfile("Sacred Flame", 2, armorPenetration: 1)
-            },
-            defensiveBeforeHitAuras: new IBeforeHitDefensiveRule[] { new ShieldRule() },
-            defensiveAfterDefenseAuras: new IAfterDefenseRule[] { new RegenerationRule() });
+            ],
+            auras: [new ShieldRule(), new RegenerationRule()]);
 
         var defenderBlessed = defenderBaseline.WithHero(highPriest);
 
@@ -583,21 +533,21 @@ public class BattleSimulatorTests
             toughness: 2,
             fear: 1,
             defense: 3,
-            weapons: new[]
-            {
+            weapons:
+            [
                 new WeaponProfile("Chieftain's Great Axe", 3, armorPenetration: 2)
-            });
+            ]);
 
         var packMaster = new HeroProfile(
             name: "Pack Master",
             quality: 3,
             toughness: 3,
             defense: 3,
-            weapons: new[]
-            {
+            weapons:
+            [
                 new WeaponProfile("Shock Prod", 2, armorPenetration: 1)
-            },
-            offensiveAuras: new IBeforeHitOffensiveRule[] { new ReliableRule() });
+            ],
+            auras: [new ReliableRule()]);
 
         var simulator = new BattleSimulator();
         var result = simulator.Simulate(
@@ -609,20 +559,22 @@ public class BattleSimulatorTests
         Assert.True(Math.Abs(result.ProbabilityUnitAWins + result.ProbabilityUnitBWins + result.ProbabilityOfTie - 1d) < 1e-6);
     }
 
-    private sealed class ExplodingSixesRule : IAfterHitRule
+    private sealed class ExplodingSixesOffensiveRule : IAfterHitOffensiveRule
     {
         public void Apply(AfterHitContext context)
         {
             context.Map(state => state.AddDirectWounds(state.NaturalSixes));
         }
+
+        public string Name => "Exploding Sixes";
     }
 
-    private sealed class FixedDirectWoundsRule : IAfterHitRule
+    private sealed class FixedDirectWoundsOffensiveRule : IAfterHitOffensiveRule
     {
         private readonly int _directWounds;
         private readonly int _selfWounds;
 
-        public FixedDirectWoundsRule(int directWounds, int selfWounds = 0)
+        public FixedDirectWoundsOffensiveRule(int directWounds, int selfWounds = 0)
         {
             _directWounds = directWounds;
             _selfWounds = selfWounds;
@@ -630,7 +582,9 @@ public class BattleSimulatorTests
 
         public void Apply(AfterHitContext context)
         {
-            context.Map(_ => new HitState(0, 0, 0).AddDirectWounds(_directWounds).AddSelfWounds(_selfWounds));
+            context.Map(_ => new HitState(0, 0, 0, _directWounds, _selfWounds));
         }
+
+        public string Name => "Fixed Direct Wounds";
     }
 }

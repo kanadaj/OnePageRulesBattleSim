@@ -2,8 +2,10 @@ using BattleSim.Core.Simulation;
 
 namespace BattleSim.Core.Rules.Units;
 
-public sealed class RegenerationRule : IAfterDefenseRule
+public sealed class RegenerationRule : IAfterDefenseDefensiveRule
 {
+    public string Name => "Regeneration";
+    
     public void Apply(AfterDefenseContext context)
     {
         if (context is null)

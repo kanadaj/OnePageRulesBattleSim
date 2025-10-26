@@ -2,6 +2,8 @@
 
 public sealed class PreciseRule : IBeforeHitOffensiveRule
 {
+    public string Name => "Precise";
+    
     public void Apply(BeforeHitContext context)
     {
         if (context is null)

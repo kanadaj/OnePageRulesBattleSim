@@ -41,10 +41,10 @@ public static class HighElves
             toughness: 1,
             fear: 0,
             modelCount: 10,
-            weapons: new[]
-            {
-                WeaponProfiles.HandWeapon,
-            }
+            weapons:
+            [
+                WeaponProfiles.HandWeapon
+            ]
         );
 
         public static readonly UnitProfile Halberd = new UnitProfile(
@@ -54,10 +54,10 @@ public static class HighElves
             toughness: 1,
             fear: 0,
             modelCount: 10,
-            weapons: new[]
-            {
-                WeaponProfiles.Halberd,
-            }
+            weapons:
+            [
+                WeaponProfiles.Halberd
+            ]
         );
 
         public static readonly UnitProfile Spear = new UnitProfile(
@@ -67,10 +67,10 @@ public static class HighElves
             toughness: 1,
             fear: 0,
             modelCount: 10,
-            weapons: new[]
-            {
-                WeaponProfiles.Spear,
-            }
+            weapons:
+            [
+                WeaponProfiles.Spear
+            ]
         );
     }
 
@@ -83,10 +83,10 @@ public static class HighElves
             toughness: 1,
             fear: 0,
             modelCount: 5,
-            weapons: new[]
-            {
-                WeaponProfiles.GreatWeapon(),
-            }
+            weapons:
+            [
+                WeaponProfiles.GreatWeapon()
+            ]
         );
 
         public static readonly UnitProfile DualHandWeapon = new UnitProfile(
@@ -96,10 +96,10 @@ public static class HighElves
             toughness: 1,
             fear: 0,
             modelCount: 5,
-            weapons: new[]
-            {
-                WeaponProfiles.DualHandWeapon,
-            }
+            weapons:
+            [
+                WeaponProfiles.DualHandWeapon
+            ]
         );
     }
 
@@ -112,20 +112,20 @@ public static class HighElves
             toughness: 1,
             fear: 0,
             modelCount: 5,
-            weapons: new[]
-            {
-                WeaponProfiles.GreatAxe,
-            },
-            defensiveAfterDefenseRules: new IAfterDefenseRule[]
-            {
-                new ResistanceRule(),
-            }
+            weapons:
+            [
+                WeaponProfiles.GreatAxe
+            ],
+            modelRules:
+            [
+                new ResistanceRule()
+            ]
         );
 
         public static UnitProfile GreatAxeWithPiercing => GreatAxe with
         {
             Name = "HE Lion Warriors (with Piercing Tag)",
-            AttackerBeforeHitRules = GreatAxe.AttackerBeforeHitRules.Append(new PiercingTagRule(2)).ToArray()
+            Rules = [..GreatAxe.Rules, new PiercingTagRule(2)]
         };
     }
 
@@ -138,20 +138,20 @@ public static class HighElves
             toughness: 1,
             fear: 0,
             modelCount: 5,
-            weapons: new[]
-            {
-                WeaponProfiles.HeavyHalberd,
-            },
-            defensiveAfterDefenseRules: new IAfterDefenseRule[]
-            {
-                new RegenerationRule(),
-            }
+            weapons:
+            [
+                WeaponProfiles.HeavyHalberd
+            ],
+            modelRules:
+            [
+                new RegenerationRule()
+            ]
         );
 
         public static UnitProfile HeavyHalberdWithPiercing => HeavyHalberd with
         {
             Name = "HE Phoenix Warriors (with Piercing Tag)",
-            AttackerBeforeHitRules = HeavyHalberd.AttackerBeforeHitRules.Append(new PiercingTagRule(2)).ToArray()
+            Rules = [..HeavyHalberd.Rules, new PiercingTagRule(2)] 
         };
     }
 
@@ -168,18 +168,18 @@ public static class HighElves
 
         public static readonly UnitProfile Longbow = Base with
         {
-            Weapons = new[]
-            {
-                WeaponProfiles.Longbow(),
-            }
+            Weapons =
+            [
+                WeaponProfiles.Longbow()
+            ]
         };
 
         public static readonly UnitProfile MasterCraftedBow = Base with
         {
-            Weapons = new[]
-            {
-                WeaponProfiles.MasterCraftedBow(),
-            }
+            Weapons =
+            [
+                WeaponProfiles.MasterCraftedBow()
+            ]
         };
     }
 
@@ -192,15 +192,15 @@ public static class HighElves
             toughness: 1,
             fear: 0,
             modelCount: 5,
-            attackerBeforeHitRules: new IBeforeHitOffensiveRule[]
-            {
-                new CavalryCapRule(),
-            },
-            weapons: new[]
-            {
+            modelRules:
+            [
+                new CavalryCapRule()
+            ],
+            weapons:
+            [
                 WeaponProfiles.Lance,
                 WeaponProfiles.Impact()
-            }
+            ]
         );
     }
 
@@ -213,15 +213,15 @@ public static class HighElves
             toughness: 1,
             fear: 0,
             modelCount: 5,
-            attackerBeforeHitRules: new IBeforeHitOffensiveRule[]
-            {
-                new CavalryCapRule(),
-            },
-            weapons: new[]
-            {
+            modelRules:
+            [
+                new CavalryCapRule()
+            ],
+            weapons:
+            [
                 WeaponProfiles.HeavyLance,
                 WeaponProfiles.HeavyImpact()
-            }
+            ]
         );
     }
 
@@ -234,10 +234,10 @@ public static class HighElves
             toughness: 3,
             fear: 0,
             modelCount: 3,
-            weapons: new[]
-            {
-                WeaponProfiles.Impact(2),
-            }
+            weapons:
+            [
+                WeaponProfiles.Impact(2)
+            ]
         );
     }
 
@@ -250,23 +250,20 @@ public static class HighElves
             toughness: 6,
             fear: 0,
             modelCount: 1,
-            defensiveAfterDefenseRules: new IAfterDefenseRule[]
-            {
+            modelRules:
+            [
                 new RegenerationRule(),
-            },
-            defensiveBeforeHitRules: new IBeforeHitDefensiveRule[]
-            {
-                new EvasionRule(),
-            },
-            weapons: new[]
-            {
-                WeaponProfiles.IceClaws,
-            }
+                new EvasionRule()
+            ],
+            weapons:
+            [
+                WeaponProfiles.IceClaws
+            ]
         );
 
         public static UnitProfile WithPiercingTag => Phoenix with
         {
-            AttackerBeforeHitRules = Phoenix.AttackerBeforeHitRules.Append(new PiercingTagRule(2)).ToArray()
+            Rules = [..Phoenix.Rules, new PiercingTagRule(2)]
         };
     }
 
@@ -279,20 +276,20 @@ public static class HighElves
             toughness: 6,
             fear: 0,
             modelCount: 1,
-            defensiveAfterDefenseRules: new IAfterDefenseRule[]
-            {
-                new RegenerationRule(),
-            },
-            weapons: new[]
-            {
+            modelRules:
+            [
+                new RegenerationRule()
+            ],
+            weapons:
+            [
                 WeaponProfiles.FlameClaws,
-                WeaponProfiles.CrossingBarrage(),
-            }
+                WeaponProfiles.CrossingBarrage()
+            ]
         );
 
         public static UnitProfile WithPiercingTag => Phoenix with
         {
-            AttackerBeforeHitRules = Phoenix.AttackerBeforeHitRules.Append(new PiercingTagRule(2)).ToArray()
+            Rules = [..Phoenix.Rules, new PiercingTagRule(2)]
         };
     }
 
@@ -305,11 +302,11 @@ public static class HighElves
             toughness: 12,
             fear: 0,
             modelCount: 1,
-            weapons: new[]
-            {
+            weapons:
+            [
                 WeaponProfiles.BreathAttack(),
-                WeaponProfiles.Greathammer,
-            }
+                WeaponProfiles.Greathammer
+            ]
         );
 
         public static readonly UnitProfile DualHammer = new UnitProfile(
@@ -319,11 +316,11 @@ public static class HighElves
             toughness: 12,
             fear: 0,
             modelCount: 1,
-            weapons: new[]
-            {
+            weapons:
+            [
                 WeaponProfiles.BreathAttack(),
-                WeaponProfiles.DualHammer,
-            }
+                WeaponProfiles.DualHammer
+            ]
         );
     }
 }

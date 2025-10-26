@@ -15,9 +15,7 @@ public sealed record WeaponProfile
         int attacksPerModel,
         int armorPenetration = 0,
         bool isRanged = false,
-        IEnumerable<IBeforeHitOffensiveRule>? beforeHitRules = null,
-        IEnumerable<IAfterHitRule>? afterHitRules = null,
-        IEnumerable<IAfterDefenseRule>? afterDefenseRules = null)
+        IReadOnlyList<IRule>? rules = null)
     {
         if (string.IsNullOrWhiteSpace(name))
         {
@@ -33,9 +31,7 @@ public sealed record WeaponProfile
         AttacksPerModel = attacksPerModel;
         ArmorPenetration = armorPenetration;
         IsRanged = isRanged;
-        BeforeHitRules = (beforeHitRules ?? Array.Empty<IBeforeHitOffensiveRule>()).ToArray();
-        AfterHitRules = (afterHitRules ?? Array.Empty<IAfterHitRule>()).ToArray();
-        AfterDefenseRules = (afterDefenseRules ?? Array.Empty<IAfterDefenseRule>()).ToArray();
+        Rules = rules ?? [];
     }
 
     public string Name { get; }
@@ -55,9 +51,10 @@ public sealed record WeaponProfile
     /// </summary>
     public bool IsRanged { get; }
 
-    public IReadOnlyList<IBeforeHitOffensiveRule> BeforeHitRules { get; init; }
+    public IReadOnlyList<IBeforeHitOffensiveRule> BeforeHitRules => Rules.OfType<IBeforeHitOffensiveRule>().ToArray();
 
-    public IReadOnlyList<IAfterHitRule> AfterHitRules { get; init; }
+    public IReadOnlyList<IAfterHitOffensiveRule> AfterHitRules => Rules.OfType<IAfterHitOffensiveRule>().ToArray();
 
-    public IReadOnlyList<IAfterDefenseRule> AfterDefenseRules { get; init; }
+    public IReadOnlyList<IAfterDefenseDefensiveRule> AfterDefenseRules => Rules.OfType<IAfterDefenseDefensiveRule>().ToArray();
+    public IReadOnlyList<IRule> Rules { get; init; }
 }

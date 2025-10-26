@@ -6,27 +6,46 @@ namespace BattleSim.Core.Rules;
 
 public interface IRule
 {
+    string Name { get; }
 }
+
+public interface IAdditiveRule : IRule
+{
+    T Merge<T>(T rule) where T : IRule;
+}
+
+public interface IAttackRule : IRule {}
+public interface IDefenseRule : IRule {}
 
 public interface IBeforeHitRule : IRule
 {
     void Apply(BeforeHitContext context);
 }
 
-public interface IBeforeHitOffensiveRule : IBeforeHitRule
+public interface IBeforeHitOffensiveRule : IBeforeHitRule, IAttackRule
 {
 }
 
-public interface IBeforeHitDefensiveRule : IBeforeHitRule
+public interface IBeforeHitDefensiveRule : IBeforeHitRule, IDefenseRule
 {
 }
 
-public interface IAfterHitRule : IRule
+public interface IAfterHitOffensiveRule : IAttackRule
 {
     void Apply(AfterHitContext context);
 }
 
-public interface IAfterDefenseRule : IRule
+public interface IAfterHitDefensiveRule : IDefenseRule
+{
+    void Apply(AfterHitContext context);
+}
+
+public interface IAfterDefenseDefensiveRule : IDefenseRule
+{
+    void Apply(AfterDefenseContext context);
+}
+
+public interface IAfterDefenseOffensiveRule : IAttackRule
 {
     void Apply(AfterDefenseContext context);
 }

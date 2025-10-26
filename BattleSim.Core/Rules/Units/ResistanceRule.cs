@@ -2,8 +2,10 @@ using BattleSim.Core.Simulation;
 
 namespace BattleSim.Core.Rules.Units;
 
-public sealed class ResistanceRule : IAfterDefenseRule
+public sealed class ResistanceRule : IAfterDefenseDefensiveRule
 {
+    public string Name => "Resistance";
+    
     public void Apply(AfterDefenseContext context)
     {
         if (context is null)

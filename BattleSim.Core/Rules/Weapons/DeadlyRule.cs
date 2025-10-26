@@ -1,7 +1,9 @@
 ﻿namespace BattleSim.Core.Rules.Weapons;
 
-public sealed class DeadlyRule(int maxWounds) : IAfterDefenseRule
+public sealed class DeadlyRule(int maxWounds) : IAfterDefenseOffensiveRule
 {
+    public string Name => "Deadly";
+    
     public void Apply(AfterDefenseContext context)
     {
         if (context is null)

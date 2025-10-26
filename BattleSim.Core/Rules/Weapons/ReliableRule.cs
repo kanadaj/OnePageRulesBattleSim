@@ -2,6 +2,8 @@
 
 public sealed class ReliableRule : IBeforeHitOffensiveRule
 {
+    public string Name => "Reliable";
+    
     public void Apply(BeforeHitContext context)
     {
         if (context is null)

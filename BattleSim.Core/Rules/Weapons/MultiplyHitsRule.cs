@@ -1,7 +1,8 @@
 ﻿namespace BattleSim.Core.Rules.Weapons;
 
-public sealed class MultiplyHitsRule(int hitMultiplier = 3) : IAfterHitRule
+public sealed class MultiplyHitsOffensiveRule(int hitMultiplier = 3) : IAfterHitOffensiveRule
 {
+    public string Name => "Multiply Hits";
 
     public void Apply(AfterHitContext context)
     {

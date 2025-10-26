@@ -30,10 +30,10 @@ var spearHero = HighElves.Heroes.Champion.WithWeapons(WeaponProfiles.Spear)
 
 var archerHeroLongbow = HighElves.Heroes.Champion.WithWeapons(WeaponProfiles.Longbow(3))
 	.WithPersonalRules(new ResistanceRule())
-	.WithAuras(new RelentlessRule());
+	.WithAuras(new RelentlessOffensiveRule());
 
 var ratBaneHero = Ratmen.Heroes.Champion
-	.WithAuras(new BaneRule());
+	.WithAuras(new BaneOffensiveRule());
 
 var battleReports = new List<BattleReport>();
 
@@ -43,24 +43,12 @@ battleReports.Add(RunBattle(simulator, HighElves.Warriors.Spear.AsCombinedUnit.W
 battleReports.Add(RunBattle(simulator, Ratmen.StormVeterans.HeavyHalberd.AsCombinedUnit, HighElves.Warriors.Spear.AsCombinedUnit.WithHero(spearHero)));
 
 battleReports.Add(RunBattle(simulator, HighElves.LionWarriors.GreatAxe.AsCombinedUnit, Ratmen.StormVeterans.HeavyHalberd.AsCombinedUnit));
+battleReports.Add(RunBattle(simulator, Ratmen.StormVeterans.HeavyHalberd.AsCombinedUnit, HighElves.LionWarriors.GreatAxe.AsCombinedUnit));
 
-battleReports.Add(RunBattle(simulator, HighElves.Archers.Longbow.AsCombinedUnit.WithHero(archerHeroLongbow), Ratmen.Warriors.HandWeapon, SimulationMode.Ranged));
-battleReports.Add(RunBattle(simulator, HighElves.Archers.Longbow.AsCombinedUnit.WithHero(archerHeroLongbow), Ratmen.Warriors.HandWeapon.AsCombinedUnit, SimulationMode.Ranged));
-battleReports.Add(RunBattle(simulator, HighElves.Archers.Longbow.AsCombinedUnit.WithHero(archerHeroLongbow), Ratmen.StormVeterans.HeavyHalberd.AsCombinedUnit, SimulationMode.Ranged));
-battleReports.Add(RunBattle(simulator, HighElves.Archers.Longbow.AsCombinedUnit.WithHero(archerHeroLongbow), Ratmen.NightScouts.DualHandWeapon.AsCombinedUnit, SimulationMode.Ranged));
-battleReports.Add(RunBattle(simulator, HighElves.Archers.Longbow.AsCombinedUnit.WithHero(archerHeroLongbow), Ratmen.RatSwarms.Base.AsCombinedUnit, SimulationMode.Ranged));
-battleReports.Add(RunBattle(simulator, HighElves.Archers.Longbow.AsCombinedUnit.WithHero(archerHeroLongbow), Ratmen.WeaponTeams.GatlingGun, SimulationMode.Ranged));
-battleReports.Add(RunBattle(simulator, HighElves.Archers.Longbow.AsCombinedUnit.WithHero(archerHeroLongbow), Ratmen.WeaponTeams.GatlingGun.AsCombinedUnit, SimulationMode.Ranged));
-
-battleReports.Add(RunBattle(simulator, Ratmen.WeaponTeams.OvertunedGatlingGun.AsCombinedUnit, HighElves.DragonCavalry.HeavyLance.AsCombinedUnit.WithHero(lionHero), SimulationMode.Ranged));
-battleReports.Add(RunBattle(simulator, Ratmen.WeaponTeams.OvertunedGatlingGun.AsCombinedUnit, lionHero.WithMount(HighElves.Heroes.Mounts.Dragon), SimulationMode.Ranged));
-battleReports.Add(RunBattle(simulator, Ratmen.WeaponTeams.OvertunedGatlingGun.AsCombinedUnit, HighElves.LionWarriors.GreatAxe.AsCombinedUnit.WithHero(lionHero), SimulationMode.Ranged));
-battleReports.Add(RunBattle(simulator, Ratmen.WeaponTeams.OvertunedGatlingGun.AsCombinedUnit, HighElves.Warriors.Spear.AsCombinedUnit, SimulationMode.Ranged));
-
-battleReports.Add(RunBattle(simulator, Ratmen.WeaponTeams.OvertunedGatlingGun.AsCombinedUnit.WithHero(ratBaneHero), HighElves.DragonCavalry.HeavyLance.AsCombinedUnit.WithHero(lionHero), SimulationMode.Ranged));
-battleReports.Add(RunBattle(simulator, Ratmen.WeaponTeams.OvertunedGatlingGun.AsCombinedUnit.WithHero(ratBaneHero), lionHero.WithMount(HighElves.Heroes.Mounts.Dragon), SimulationMode.Ranged));
-battleReports.Add(RunBattle(simulator, Ratmen.WeaponTeams.OvertunedGatlingGun.AsCombinedUnit.WithHero(ratBaneHero), HighElves.LionWarriors.GreatAxe.AsCombinedUnit.WithHero(lionHero), SimulationMode.Ranged));
-battleReports.Add(RunBattle(simulator, Ratmen.WeaponTeams.OvertunedGatlingGun.AsCombinedUnit.WithHero(ratBaneHero), HighElves.Warriors.Spear.AsCombinedUnit, SimulationMode.Ranged));
+battleReports.Add(RunBattle(simulator, HighElves.LionWarriors.GreatAxe.AsCombinedUnit, EternalWardens.Destroyers.MeteorHammer));
+battleReports.Add(RunBattle(simulator, HighElves.LionWarriors.GreatAxe.AsCombinedUnit.WithHero(lionHero), EternalWardens.Destroyers.MeteorHammer.AsCombinedUnit));
+battleReports.Add(RunBattle(simulator, EternalWardens.Destroyers.MeteorHammer.AsCombinedUnit, Ratmen.GiantBlessedBeast.GiantOtter));
+battleReports.Add(RunBattle(simulator, Ratmen.GiantBlessedBeast.GiantOtter, EternalWardens.Destroyers.MeteorHammer.AsCombinedUnit));
 
 Console.WriteLine("Combined battle summary:");
 PrintCombinedBattleTable(battleReports);

@@ -2,6 +2,8 @@
 
 public sealed class CavalryCapRule : IBeforeHitOffensiveRule, IWeaponKeyword
 {
+    public string Name => "Cavalry";
+    
     private const int MaximumChargingModels = 5;
 
     public void Apply(BeforeHitContext context)

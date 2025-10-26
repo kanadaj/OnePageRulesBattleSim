@@ -2,6 +2,8 @@
 
 public sealed class ThrustRule : IBeforeHitOffensiveRule
 {
+    public string Name => "Thrust";
+    
     public void Apply(BeforeHitContext context)
     {
         if (context is null)

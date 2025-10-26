@@ -2,8 +2,10 @@
 
 namespace BattleSim.Core.Rules.Weapons;
 
-public sealed class UnpredictableFighterRule : IAfterHitRule
+public sealed class UnpredictableFighterOffensiveRule : IAfterHitOffensiveRule
 {
+    public string Name => "Unpredictable Fighter";
+    
     private const double BranchProbability = 0.5d;
 
     public void Apply(AfterHitContext context)
@@ -58,11 +60,11 @@ public sealed class UnpredictableFighterRule : IAfterHitRule
     {
         if (totalAttacks <= 0)
         {
-            return ProbabilityDistribution<HitState>.Certain(new HitState(0, 0, 0));
+            return ProbabilityDistribution<HitState>.Certain(new HitState(0, 0, 0, 0));
         }
 
         var singleAttack = BuildSingleAttackDistribution(qualityTarget);
-        var distribution = ProbabilityDistribution<HitState>.Certain(new HitState(0, 0, 0));
+        var distribution = ProbabilityDistribution<HitState>.Certain(new HitState(0, 0, 0, 0));
 
         for (var i = 0; i < totalAttacks; i++)
         {
@@ -102,10 +104,10 @@ public sealed class UnpredictableFighterRule : IAfterHitRule
             outcomes[state] = probability;
         }
 
-        AddOutcomeLocal(new HitState(0, 0, 1), probabilityNatOne);
-        AddOutcomeLocal(new HitState(1, 1, 0), probabilityNatSix);
-        AddOutcomeLocal(new HitState(1, 0, 0), probabilityRegularSuccess);
-        AddOutcomeLocal(new HitState(0, 0, 0), probabilityRegularFailure);
+        AddOutcomeLocal(new HitState(0, 0, 1, 0), probabilityNatOne);
+        AddOutcomeLocal(new HitState(1, 1, 0, 0), probabilityNatSix);
+        AddOutcomeLocal(new HitState(1, 0, 0, 0), probabilityRegularSuccess);
+        AddOutcomeLocal(new HitState(0, 0, 0, 0), probabilityRegularFailure);
 
         return new ProbabilityDistribution<HitState>(outcomes);
     }

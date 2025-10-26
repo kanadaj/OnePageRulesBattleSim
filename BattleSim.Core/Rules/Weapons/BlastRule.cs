@@ -1,7 +1,9 @@
 ﻿namespace BattleSim.Core.Rules.Weapons;
 
-public sealed class BlastRule(int maxWounds) : IAfterHitRule
+public sealed class BlastOffensiveRule(int maxWounds) : IAfterHitOffensiveRule
 {
+    public string Name => "Blast";
+    
     public void Apply(AfterHitContext context)
     {
         if (context is null)

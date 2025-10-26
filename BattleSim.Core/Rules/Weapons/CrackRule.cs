@@ -1,7 +1,9 @@
 ﻿namespace BattleSim.Core.Rules.Weapons;
 
-public sealed class CrackRule : IAfterHitRule, IWeaponKeyword
+public sealed class CrackOffensiveRule : IAfterHitOffensiveRule, IWeaponKeyword
 {
+    public string Name => "Crack";
+        
     public void Apply(AfterHitContext context)
     {
         if (context is null)

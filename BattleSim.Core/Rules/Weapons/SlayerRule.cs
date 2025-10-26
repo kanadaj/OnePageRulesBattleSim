@@ -2,6 +2,8 @@
 
 public sealed class SlayerRule : IBeforeHitOffensiveRule
 {
+    public string Name => "Slayer";
+    
     public void Apply(BeforeHitContext context)
     {
         if (context is null)

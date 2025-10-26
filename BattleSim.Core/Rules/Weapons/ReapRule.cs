@@ -2,6 +2,8 @@
 
 public sealed class ReapRule : IBeforeHitOffensiveRule
 {
+    public string Name => "Reap";
+    
     public void Apply(BeforeHitContext context)
     {
         if (context is null)

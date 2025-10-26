@@ -1,7 +1,9 @@
 namespace BattleSim.Core.Rules.Units;
 
-public sealed class FortifiedRule : IAfterHitRule
+public sealed class FortifiedOffensiveRule : IAfterHitDefensiveRule
 {
+    public string Name => "Fortified";
+    
     public void Apply(AfterHitContext context)
     {
         if (context is null)

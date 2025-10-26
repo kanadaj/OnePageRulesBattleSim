@@ -2,6 +2,8 @@ namespace BattleSim.Core.Rules.Units;
 
 public sealed class StealthRule : IBeforeHitDefensiveRule
 {
+    public string Name => "Stealth";
+    
     public void Apply(BeforeHitContext context)
     {
         if (context is null)

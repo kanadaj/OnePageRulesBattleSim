@@ -1,7 +1,9 @@
 ﻿namespace BattleSim.Core.Rules.Weapons;
 
-public sealed class RelentlessRule : IAfterHitRule
+public sealed class RelentlessOffensiveRule : IAfterHitOffensiveRule
 {
+    public string Name => "Relentless";
+    
     public void Apply(AfterHitContext context)
     {
         if (context is null)

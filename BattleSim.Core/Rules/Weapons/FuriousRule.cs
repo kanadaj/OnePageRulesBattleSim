@@ -1,7 +1,9 @@
 ﻿namespace BattleSim.Core.Rules.Weapons;
 
-public sealed class FuriousRule : IAfterHitRule
+public sealed class FuriousOffensiveRule : IAfterHitOffensiveRule
 {
+    public string Name => "Furious";
+    
     public void Apply(AfterHitContext context)
     {
         if (context is null)
