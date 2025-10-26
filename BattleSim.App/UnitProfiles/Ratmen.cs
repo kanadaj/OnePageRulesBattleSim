@@ -11,6 +11,8 @@ Giant Beast: 1 Model, Tough(12), Quality 4, Defense 3, Regeneration, Unpredictab
 using BattleSim.App;
 using BattleSim.Core.Models;
 using BattleSim.Core.Rules;
+using BattleSim.Core.Rules.Units;
+using BattleSim.Core.Rules.Weapons;
 
 public static class Ratmen
 {

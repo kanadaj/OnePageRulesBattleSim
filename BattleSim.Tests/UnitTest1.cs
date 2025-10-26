@@ -1,6 +1,8 @@
 ﻿using BattleSim.App.UnitProfiles;
 using BattleSim.Core.Models;
 using BattleSim.Core.Rules;
+using BattleSim.Core.Rules.Units;
+using BattleSim.Core.Rules.Weapons;
 using BattleSim.Core.Simulation;
 
 namespace BattleSim.Tests;
@@ -445,7 +447,7 @@ public class BattleSimulatorTests
     [Fact]
     public void RangedAttack_CountsHeroAsSingleAdditionalModel()
     {
-        var hero = new HeroProfile("Warleader", quality: 3, toughness: 5);
+        var hero = new HeroProfile("Warleader", quality: 3, toughness: 5, defense: 3);
 
         var defender = new UnitProfile(
             name: "Guardian Phalanx",
@@ -521,6 +523,7 @@ public class BattleSimulatorTests
             quality: 2,
             toughness: 2,
             fear: 1,
+            defense: 3,
             weapons: new[]
             {
                 new WeaponProfile(
@@ -553,6 +556,7 @@ public class BattleSimulatorTests
             quality: 3,
             toughness: 2,
             fear: 1,
+            defense: 3,
             weapons: new[]
             {
                 new WeaponProfile("Sacred Flame", 2, armorPenetration: 1)
@@ -578,6 +582,7 @@ public class BattleSimulatorTests
             quality: 2,
             toughness: 2,
             fear: 1,
+            defense: 3,
             weapons: new[]
             {
                 new WeaponProfile("Chieftain's Great Axe", 3, armorPenetration: 2)
@@ -587,6 +592,7 @@ public class BattleSimulatorTests
             name: "Pack Master",
             quality: 3,
             toughness: 3,
+            defense: 3,
             weapons: new[]
             {
                 new WeaponProfile("Shock Prod", 2, armorPenetration: 1)
@@ -624,7 +630,7 @@ public class BattleSimulatorTests
 
         public void Apply(AfterHitContext context)
         {
-            context.Map(_ => new HitState(0, 0, 0, _directWounds, _selfWounds));
+            context.Map(_ => new HitState(0, 0, 0).AddDirectWounds(_directWounds).AddSelfWounds(_selfWounds));
         }
     }
 }

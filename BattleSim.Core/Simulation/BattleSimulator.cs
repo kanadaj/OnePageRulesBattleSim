@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using BattleSim.Core.Models;
 using BattleSim.Core.Rules;
+using BattleSim.Core.Rules.Weapons;
 
 namespace BattleSim.Core.Simulation;
 
@@ -366,7 +367,7 @@ public sealed class BattleSimulator
         var qualityTarget = Math.Max(2, beforeContext.Quality);
         var armorPenetration = beforeContext.ArmorPenetration;
 
-        var hitDistribution = BuildHitDistribution(totalAttacks, qualityTarget);
+        var hitDistribution = BuildRollDistribution(totalAttacks, qualityTarget);
 
     var afterHitContext = new AfterHitContext(attacker, defender, weapon, hitDistribution, isCharging, totalAttacks, qualityTarget);
         ApplyRules(weapon.AfterHitRules, afterHitContext);
@@ -388,21 +389,21 @@ public sealed class BattleSimulator
 
         return afterDefenseContext.Distribution.Select(state => new AttackDamage(
             DefenderWounds: Math.Max(0, state.UnsavedWounds),
-            SelfInflictedWounds: Math.Max(0, state.HitState.SelfWounds),
-            Hits: Math.Max(0, state.HitState.TotalHits)));
+            SelfInflictedWounds: Math.Max(0, state.SelfWounds),
+            Hits: Math.Max(0, state.SelfWounds)));
     }
 
-    private static ProbabilityDistribution<HitState> BuildHitDistribution(int totalAttacks, int qualityTarget)
+    private static ProbabilityDistribution<HitState> BuildRollDistribution(int totalRolls, int target, bool rerollSixes = false)
     {
-        if (totalAttacks <= 0)
+        if (totalRolls <= 0)
         {
-            return ProbabilityDistribution<HitState>.Certain(new HitState(0, 0, 0, 0));
+            return ProbabilityDistribution<HitState>.Certain(new HitState(0, 0, 0));
         }
 
-        var singleAttack = BuildSingleAttackDistribution(qualityTarget);
-        var distribution = ProbabilityDistribution<HitState>.Certain(new HitState(0, 0, 0, 0));
+        var singleAttack = BuildSingleRollDistribution(target, rerollSixes);
+        var distribution = ProbabilityDistribution<HitState>.Certain(new HitState(0, 0, 0));
 
-        for (var i = 0; i < totalAttacks; i++)
+        for (var i = 0; i < totalRolls; i++)
         {
             distribution = distribution.Combine(singleAttack, static (left, right) => left.Add(right));
         }
@@ -410,9 +411,9 @@ public sealed class BattleSimulator
         return distribution;
     }
 
-    private static ProbabilityDistribution<HitState> BuildSingleAttackDistribution(int qualityTarget)
+    private static ProbabilityDistribution<HitState> BuildSingleRollDistribution(int target, bool rerollSixes = false)
     {
-        var quality = Math.Max(2, qualityTarget);
+        var quality = Math.Max(2, target);
 
         const double faceProbability = 1d / 6d;
         var probabilityNatOne = faceProbability;
@@ -428,6 +429,16 @@ public sealed class BattleSimulator
         var probabilityRegularSuccess = successesBetweenTwoAndFive * faceProbability;
         var probabilityRegularFailure = Math.Max(0d, 1d - (probabilityNatOne + probabilityNatSix + probabilityRegularSuccess));
 
+        // If we reroll sixes, the chance of each roll increases by 1/6 (except 6 itself which is then rerolled)
+        if (rerollSixes)
+        {
+            probabilityNatSix = faceProbability / 6d;
+            probabilityNatOne += faceProbability / 6d;
+            probabilityRegularSuccess += probabilityRegularSuccess / 6d;
+            probabilityRegularFailure += probabilityRegularFailure / 6d;
+        }
+        
+
         var outcomes = new Dictionary<HitState, double>();
 
         void AddOutcome(HitState state, double probability)
@@ -440,10 +451,10 @@ public sealed class BattleSimulator
             outcomes[state] = probability;
         }
 
-        AddOutcome(new HitState(0, 0, 1, 0), probabilityNatOne);
-        AddOutcome(new HitState(1, 1, 0, 0), probabilityNatSix);
-        AddOutcome(new HitState(1, 0, 0, 0), probabilityRegularSuccess);
-        AddOutcome(new HitState(0, 0, 0, 0), probabilityRegularFailure);
+        AddOutcome(new HitState(0, 0, 1), probabilityNatOne);
+        AddOutcome(new HitState(1, 1, 0), probabilityNatSix);
+        AddOutcome(new HitState(1, 0, 0), probabilityRegularSuccess);
+        AddOutcome(new HitState(0, 0, 0), probabilityRegularFailure);
 
         return new ProbabilityDistribution<HitState>(outcomes);
     }
@@ -460,7 +471,7 @@ public sealed class BattleSimulator
             if (totalHits <= 0)
             {
                 var wounds = Math.Max(0, hitState.DirectWounds);
-                return ProbabilityDistribution<DefenseState>.Certain(new DefenseState(hitState, wounds));
+                return ProbabilityDistribution<DefenseState>.Certain(new DefenseState(wounds, hitState.SelfWounds, 0));
             }
 
             var naturalSixHits = Math.Clamp(hitState.NaturalSixes, 0, totalHits);
@@ -469,17 +480,11 @@ public sealed class BattleSimulator
             var baseArmorPenetration = armorPenetration + defenseModifiers.AdditionalArmorPenetration + hitState.ArmorPenetrationBonus;
             var rerollSixes = defenseModifiers.ForceDefenseSixReroll;
 
-            var unsavedRegular = ComputeUnsavedProbability(defender.Defense, baseArmorPenetration, rerollSixes);
-            var unsavedSix = ComputeUnsavedProbability(
-                defender.Defense,
-                baseArmorPenetration + defenseModifiers.AdditionalArmorPenetrationOnNaturalSix,
-                rerollSixes);
+            var regularDistribution = BuildRollDistribution(regularHits, defender.Defense - baseArmorPenetration, rerollSixes);
+            var sixDistribution = BuildRollDistribution(naturalSixHits, defender.Defense - baseArmorPenetration - defenseModifiers.AdditionalArmorPenetrationOnNaturalSix);
 
-            var regularDistribution = BuildBinomialDistribution(regularHits, unsavedRegular);
-            var sixDistribution = BuildBinomialDistribution(naturalSixHits, unsavedSix);
-
-            return regularDistribution.Combine(sixDistribution, static (regular, six) => regular + six)
-                                       .Select(total => new DefenseState(hitState, total + hitState.DirectWounds));
+            return regularDistribution.Combine(sixDistribution, static (regular, six) => regular.Add(six))
+                                       .Select(total => new DefenseState(total.TotalHits + hitState.DirectWounds, hitState.SelfWounds, hitState.NaturalOnes));
         });
     }
 
@@ -487,71 +492,72 @@ public sealed class BattleSimulator
     {
         var defense = Math.Max(2, defenseTarget);
         const double faceProbability = 1d / 6d;
-        double baseUnsaved = 0d;
+        double unsaved = 0d;
 
         for (var roll = 1; roll <= 6; roll++)
         {
             if (roll == 1)
             {
-                baseUnsaved += faceProbability;
+                unsaved += faceProbability;
                 continue;
             }
 
             if (roll == 6)
             {
-                continue;
+                if (forceRerollSix)
+                {
+                    unsaved += ComputeUnsavedProbability(defenseTarget, armorPenetration, false) / 6d;
+                }
+                else
+                {
+                    continue;
+                }
             }
 
             var adjusted = roll - armorPenetration;
             var saves = adjusted >= defense;
             if (!saves)
             {
-                baseUnsaved += faceProbability;
+                unsaved += faceProbability;
             }
         }
 
-        var totalUnsaved = baseUnsaved;
-        if (forceRerollSix)
-        {
-            totalUnsaved += faceProbability * baseUnsaved;
-        }
-
-        return Math.Clamp(totalUnsaved, 0d, 1d);
+        return Math.Clamp(unsaved, 0d, 1d);
     }
 
-    private static ProbabilityDistribution<int> BuildBinomialDistribution(int trials, double successProbability)
-    {
-        if (trials <= 0)
-        {
-            return ProbabilityDistribution<int>.Certain(0);
-        }
-
-        successProbability = Math.Clamp(successProbability, 0d, 1d);
-        var outcomes = new Dictionary<int, double>();
-
-        var combination = 1d;
-        for (var k = 0; k <= trials; k++)
-        {
-            if (k == 0)
-            {
-                combination = 1d;
-            }
-            else
-            {
-                combination *= (double)(trials - (k - 1)) / k;
-            }
-
-            var probability = combination * Math.Pow(successProbability, k) * Math.Pow(1d - successProbability, trials - k);
-            if (probability <= 0)
-            {
-                continue;
-            }
-
-            outcomes[k] = probability;
-        }
-
-        return new ProbabilityDistribution<int>(outcomes);
-    }
+    // private static ProbabilityDistribution<int> BuildBinomialDistribution(int trials, double successProbability)
+    // {
+    //     if (trials <= 0)
+    //     {
+    //         return ProbabilityDistribution<int>.Certain(0);
+    //     }
+    //
+    //     successProbability = Math.Clamp(successProbability, 0d, 1d);
+    //     var outcomes = new Dictionary<int, double>();
+    //
+    //     var combination = 1d;
+    //     for (var k = 0; k <= trials; k++)
+    //     {
+    //         if (k == 0)
+    //         {
+    //             combination = 1d;
+    //         }
+    //         else
+    //         {
+    //             combination *= (double)(trials - (k - 1)) / k;
+    //         }
+    //
+    //         var probability = combination * Math.Pow(successProbability, k) * Math.Pow(1d - successProbability, trials - k);
+    //         if (probability <= 0)
+    //         {
+    //             continue;
+    //         }
+    //
+    //         outcomes[k] = probability;
+    //     }
+    //
+    //     return new ProbabilityDistribution<int>(outcomes);
+    // }
 
     private static int RemainingRegularModels(UnitProfile defender, int woundsSustained)
     {

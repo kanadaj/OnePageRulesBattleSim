@@ -2,6 +2,8 @@
 using BattleSim.App.UnitProfiles;
 using BattleSim.Core.Models;
 using BattleSim.Core.Rules;
+using BattleSim.Core.Rules.Units;
+using BattleSim.Core.Rules.Weapons;
 using BattleSim.Core.Simulation;
 
 var simulator = new BattleSimulator();

@@ -3,7 +3,7 @@ namespace BattleSim.Core.Simulation;
 /// <summary>
 /// Bundles the defensive resolution outcome for a weapon, preserving the originating hit statistics.
 /// </summary>
-public readonly record struct DefenseState(HitState HitState, int UnsavedWounds)
+public readonly record struct DefenseState(int UnsavedWounds, int SelfWounds, int NaturalOnes)
 {
     public DefenseState AdjustUnsaved(int delta)
     {

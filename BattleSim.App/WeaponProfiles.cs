@@ -1,5 +1,6 @@
 using BattleSim.Core.Models;
 using BattleSim.Core.Rules;
+using BattleSim.Core.Rules.Weapons;
 using BattleSim.Core.Simulation;
 
 namespace BattleSim.App;
